@@ -48,13 +48,13 @@
 \newcommand{\bmu}{\boldsymbol{\mu}}
 \newcommand{\bSig}{\boldsymbol{\Sigma}}
 
-\title{Learning with Gaussian Processes}
+\title{Learning with Gaussian Processes using GPy}
 \author{Nishanth Koganti}
 \date{\today}
 
 \begin{document}
 
-  \begin{frame}
+  \begin{frame}[noframenumbering]
     \titlepage
   \end{frame}
 
@@ -86,7 +86,7 @@
     \end{center}
   \end{frame}
 
-  \begin{frame}
+  \begin{frame}[noframenumbering]
     \frametitle{Outline}
     \tableofcontents
   \end{frame}
@@ -184,45 +184,6 @@
     \end{equation*}
 
     Coordinates of $\boldf$ are plot as a function of corresponding $x$
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Random sample for single dimension}
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.8\textwidth]{gpSample.png}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{2 Dimensional Gaussian Process Sample}
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.8\textwidth]{gpSample2.png}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Sequential Generation of Samples}
-    Factorize the joint distribution and generate function values sequentially:
-
-    \begin{equation*}
-      p(f_1,\dots,f_n|\bx_1,\dots,\bx_n) = \prod_{i=1}^{n} p(f_i|f_{i-1},\dots,f_1,\bx_1,\dots,\bx_n)
-    \end{equation*}
-
-    \pause
-
-    What do individual terms look like?
-
-    \begin{equation*}
-      \begin{array}{c}
-        p(\bx,\by) = \gaussN\left(\begin{bmatrix} \ba \\ \bb \end{bmatrix}, \begin{bmatrix} \bA & \bB \\ \bB^T & \bC \end{bmatrix} \right) \\~\\
-        p(\bx|\by) = \gaussN(\ba + \bB \bC^{-1} (\by-\bb), \bA - \bB
-         \bC^{-1}\bB^T)
-      \end{array}
-    \end{equation*}
   \end{frame}
 
   \section{Inference using Gaussian Processes}
@@ -364,60 +325,6 @@
   \end{frame}
 
   \begin{frame}
-    \frametitle{Graphical Model for Gaussian Processes}
-
-    \begin{columns}
-      \begin{column}{0.55\textwidth}
-        \begin{figure}
-          \centering
-          \includegraphics[width=\textwidth]{gpModel.png}
-        \end{figure}
-      \end{column}
-      \begin{column}{0.45\textwidth}
-        \begin{itemize}
-          \item All pairs of latent variables are connected.\\~
-          \item Predictions $y^*$ depend only on corresponding latent $f^*$.\\~
-          \item Adding $x_m^*,y_m^*,f_m^*$ does not influence the distribution. Guaranteed by marginalization property.\\~
-        \end{itemize}
-      \end{column}
-    \end{columns}
-
-    \begin{center}
-      \textbf{Explains why inference uses finite amount of computation!}
-    \end{center}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Interpretation of $\gp$ Inference}
-    Recalling predictive distribution:
-
-    \begin{equation*}
-      \begin{array}{c}
-        p(y^*|x^*,\bx,\by) \sim \gaussN ( k(x^*,\bx)[K + \sigma^2_{noise}]^{-1}\by, \\[0.2cm]
-        \; k(x*,x*) - k(x^*,\bx)[K + \sigma^2_{noise}I]^{-1} k(\bx,x^*) )
-      \end{array}
-    \end{equation*}
-
-    \pause
-
-    Mean can be linearly represented as:
-
-    \begin{equation*}
-      \bmu(x^*) = k(x^*,\bx)[K + \sigma_{noise}^2]^{-1} \by = \sum_{i=1}^n \beta_iy_i = \sum_{i=1}^n \alpha_ik(x^*,x_i)
-    \end{equation*}
-
-    \pause
-
-    Variance is composed of two terms:
-
-    \begin{equation*}
-      \bSig{x^*} = \underset{\text{\textbf{prior variance}}}{k(x*,x*)} - \underset{\text{\textbf{variance by data}}}{k(x^*,\bx)[K + \sigma^2_{noise}I]^{-1} k(\bx,x^*)}
-    \end{equation*}
-
-    \textbf{Note that the variance is independent of observed outputs $\by$}.
-  \end{frame}
-
-  \begin{frame}
     \frametitle{Optimizing Marginal Likelihood}
     \begin{equation*}
       \log p(\by|\bx,M) = - \textcolor{blue}{\frac{1}{2} \by^T K^{-1} \by} - \textcolor{red}{\frac{1}{2} \log|K|} - \frac{n}{2} \log (2\pi)
@@ -464,114 +371,7 @@
     \end{figure}
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Analogous Example}
-
-    Task: Fitting variance, $\sigma^2$, of zero-mean Gaussian to $n$ scalar observations.
-
-    \begin{figure}
-      \centering
-      \includegraphics[height=0.6\textheight]{occamsRazor2.png}
-    \end{figure}
-
-    Log likelihood is $\log p(y|\mu,\sigma^2) = \textcolor{blue}{- \frac{1}{2} \sum \frac{(y_i - \mu)}{\sigma^2}} \textcolor{red}{- \frac{n}{2} \log(\sigma^2)} - \frac{n}{2} \log(2\pi)$
-  \end{frame}
-
   \section{Covariance Functions}
-
-  \begin{frame}
-    \frametitle{Covariance Function for Linear Models}
-    Consider the class of linear functions:
-
-    \begin{equation*}
-      f(x) = ax + b,~\text{where } a \sim \gaussN(0,\alpha), \text{ and } b \sim \gaussN(0,\beta)
-    \end{equation*}
-
-    \pause
-
-    We can compute the mean as:
-
-    \begin{equation*}
-      \mu(x) = E[f(x)] = \int \int f(x) p(a) p(b) da db = \int a x p(a) da + \int b p(b) db = 0
-    \end{equation*}
-
-    \pause
-
-    and covariance function as:
-
-    \begin{equation*}
-      \begin{array}{c}
-        k(x,x') = E[(f(x) - 0)(f(x') - 0)] = \int \int (ax+b)(ax'+b)p(a)p(b)dadb\\[0.2cm]
-        = \int a^2 x x' p(a) da + \int b^2 p(b) db + (x + x') \int a b p(a) p(b) da db = \alpha x x' + \beta
-      \end{array}
-    \end{equation*}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Regression with Basis Functions}
-    Consider the class of linear functions:
-
-    \begin{equation*}
-      \begin{array}{cc}
-        f(x) & = \lim_{n \leftarrow \infty} \frac{1}{n} \sum_i \gamma_i \exp(-(x - i/n)^2),~\text{where } \gamma_i \sim \gaussN(0,1), \forall i \\[0.2cm]
-        & = \int_{- \infty}^{\infty} \gamma(u) \exp(-(x - u)^2)du,~\text{where}~\gamma(u) \sim \gaussN(0,1), \forall u
-      \end{array}
-    \end{equation*}
-
-    \pause
-
-    Mean function is:
-
-    \begin{equation*}
-      \mu(x) = E[f(x)] = \int_{- \infty}^{\infty} \exp(-(x-u)^2) \int_{- \infty}^{\infty} \gamma p(\gamma) d\gamma du = 0
-    \end{equation*}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Regression with Basis Functions}
-
-    Covariance function is:
-
-    \begin{equation*}
-      \begin{array}{c}
-        E[f(x)f(x')] = \int \exp ( - (x-u)^2 - (x' - u)^2)du \\[0.2cm]
-        = \int \exp \left( -2 \left( u - \frac{x + x'}{2} \right)^2 + \frac{(x- x')^2}{2} - x^2 -x'^2 \right) du \\[0.2cm]
-        \propto \exp \left( - \frac{(x - x')^2}{2} \right)
-      \end{array}
-    \end{equation*}
-
-    \pause
-
-    \begin{center}
-      \textbf{Using squared exponential covariance function is equivalent to regression using infinitely many bell-shaped basis functions!}
-    \end{center}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Using finite basis functions can be dangerous!}
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=\textwidth]{finiteBasis.png}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Model Selection in Practice}
-
-    Two types of selection: \emph{form} and \emph{parameters} of covariance function.\\~
-
-    \textcolor{blue}{Hyperparameters} form a herarchical model. Eg, ARD Covariance Function:
-
-    \begin{equation*}
-      k(x,x') = \nu_0^2 \exp \left( - \sum_{d=1}^D \frac{(x_d - x_d')^2}{2\nu_d^2} \right),~\text{hyperparameters}~\theta = (\nu_0,\dots,\sigma_{noise}^2)
-    \end{equation*}
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.8\textwidth]{hyperparameters.png}
-    \end{figure}
-  \end{frame}
 
   \begin{frame}
     \frametitle{Rational Quadratic (RQ) Covariance Function}
@@ -582,21 +382,6 @@
 
     with $\alpha, l > 0$ can be seen as an infinite sum of squared exponential (SE) covariance functions with differen length-scales.\\~
 
-    \pause
-
-    Using $\tau = l^2$ and $p(\tau | \alpha, \beta) \propto \tau^{\alpha - 1} \exp (- \alpha \tau / \beta)$:
-
-    \begin{equation*}
-      \begin{array}{c}
-        k_{RQ}(r) = \int p(\tau | \alpha, \beta) k_{SE}(r| \tau) d\tau \\
-        \propto \int \tau^{\alpha - 1} \exp \left( - \frac{\alpha \tau}{\beta} \right) \exp \left( - \frac{\tau r^2}{2} \right) d \tau \propto \left( 1 + \frac{r^2}{2 \alpha l^2} \right)^{- \alpha}
-      \end{array}
-    \end{equation*}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Rational Quadratic Covariance Function}
-
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{rationalCovFunc.png}
@@ -605,6 +390,7 @@
     \begin{center}
       Limit $\alpha \leftarrow \infty$ of the RQ covariance function is SE.
     \end{center}
+
   \end{frame}
 
   \begin{frame}
@@ -613,27 +399,15 @@
     \begin{equation*}
       k(x,x') = \frac{1}{\Gamma(\nu) 2^{\nu - 1}} \left[ \frac{\sqrt{2 \nu}}{l} |x - x'| \right]^{\nu} K_{\nu} \left( \frac{\sqrt{2 \nu}{l}} |x - x'| \right)
     \end{equation*}
-
     where $K_{\nu}$ is a Bessel function of order $\nu$, and $l$ is the length scale.\\~
 
-    \pause
-
     Samples of Matern forms are $\lfloor \nu - 1 \rfloor$ times differentiable.
-
-    \begin{itemize}
-      \item $k_{\nu = 5/2} (r) = \left( 1 + \frac{\sqrt{5}r}{l} + \frac{5 r^2}{3 l^2} \right) \exp \left( - \frac{\sqrt{5}r}{l} \right)$: Twice differentiable
-      \item $k_{\nu \leftarrow \infty} (r) = \exp \left( - \frac{r^2}{2 l^2} \right)$: Smooth (Infinite differentiable)
-    \end{itemize}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Matern Covariance Function}
-    Univariate Matern covariance functions with unit length scale and unit variance:
 
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{maternCovFunc.png}
     \end{figure}
+
   \end{frame}
 
   \begin{frame}
@@ -700,15 +474,6 @@
     \begin{figure}
       \centering
       \includegraphics[width=0.8\textwidth]{prediction3.png}
-    \end{figure}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Mean Seasonal Component}
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=\textwidth]{prediction4.png}
     \end{figure}
   \end{frame}
 
