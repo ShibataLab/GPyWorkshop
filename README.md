@@ -28,6 +28,13 @@ The `sudo` is optional if you want to have installation in the root folder when 
 
 * [Anaconda](https://www.continuum.io/downloads): Necessary for Windows, optional for Linux.
 
+## PC setup for Ubuntu (14.04-16.04)
+
+* GPy has dependencies for Fortran, LibBlas and LibAtlas. Please run the following command before installing GPy:
+```
+sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
+```
+
 ## PC setup for Windows
 
 For Windows Operating System:
