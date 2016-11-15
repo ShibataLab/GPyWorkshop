@@ -86,6 +86,33 @@
     \end{center}
   \end{frame}
 
+  \begin{frame}
+    \frametitle{Gaussian Processes: Extremely Short Overview}
+
+    \begin{columns}
+      \begin{column}{0.33\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=\textwidth]{func1.png}
+        \end{figure}
+      \end{column}
+      \pause
+      \begin{column}{0.33\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=\textwidth]{func2.png}
+        \end{figure}
+      \end{column}
+      \pause
+      \begin{column}{0.33\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=\textwidth]{func3.png}
+        \end{figure}
+      \end{column}
+    \end{columns}
+  \end{frame}
+
   \begin{frame}[noframenumbering]
     \frametitle{Outline}
     \tableofcontents
@@ -130,14 +157,10 @@
       \textbf{Definition}: \emph{Gaussian Process is a collection of random variables, any finite collection of which are Gaussian Distributed.}
     \end{block}
 
-    \pause
-
     Gaussian \textcolor{blue}{distribution}: mean \textcolor{red}{vector}, $\bmu$, and covariance \textcolor{red}{matrix} $\bSig$:
     \begin{equation*}
       \mathbf{f} = (f_1,\dots,f_n)^T \sim \gaussN(\bmu,\bSig),~~\text{indices } i = 1,\dots,n
     \end{equation*}
-
-    \pause
 
     Gaussian \textcolor{blue}{process}: mean \textcolor{red}{function}, $m(x)$, and covariance \textcolor{red}{function} $k(x,x')$:
     \begin{equation*}
@@ -154,8 +177,6 @@
     \begin{equation*}
       p(\bx) = \int p(\bx,\by)d \by
     \end{equation*}
-
-    \pause
 
     For Gaussians:
 
@@ -175,8 +196,6 @@
       p(f(x)) \sim \gp \left( m(x) = 0, k(x,x') = \exp \left( - \frac{1}{2} (x - x')^2 \right) \right)
     \end{equation*}
 
-    \pause
-
     Sampling is done by focusing on subset $\boldf = (f(x_1), f(x_2),\dots,f(x_n))^T$:
 
     \begin{equation*}
@@ -184,6 +203,53 @@
     \end{equation*}
 
     Coordinates of $\boldf$ are plot as a function of corresponding $x$
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Gaussian Distribution Sample}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{samplePath.png}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}[noframenumbering]
+    \frametitle{Gaussian Distribution Sample: $f1$ vs $f2$}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{covariance1.png}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}[noframenumbering]
+    \frametitle{Gaussian Distribution Sample: $f1$ vs $f5$}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=\textwidth]{covariance2.png}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Squared Exponential Covariance Function}
+
+    \begin{columns}
+      \begin{column}{0.35\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=\textwidth]{kernelMatrix.png}
+        \end{figure}
+      \end{column}
+
+      \begin{column}{0.45\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=\textwidth]{samplePaths.png}
+        \end{figure}
+      \end{column}
+    \end{columns}
   \end{frame}
 
   \section{Inference using Gaussian Processes}
@@ -196,21 +262,15 @@
         \item model: $\by = f_w(\bx) + \epsilon$
       \end{itemize}
 
-    \pause
-
     Gaussian Likelihood:
       \begin{equation*}
         \textcolor{red}{p(\by|\bx, \bw, M)} \propto \prod_i \exp \left( - \frac{ (y_i - f_{\bw}(x_i))^2}{2 \sigma_{noise}^2} \right)
       \end{equation*}
 
-    \pause
-
     Maximizing Likelihood:
       \begin{equation*}
         \bw_{ML} = \argmax_{\bw} \textcolor{red}{p(\by|\bx,\bw,M)}
       \end{equation*}
-
-    \pause
 
     Making predictions:
       \begin{equation*}
@@ -226,21 +286,15 @@
         \item model: $\by = f_w(\bx) + \epsilon$
       \end{itemize}
 
-    \pause
-
     Gaussian Likelihood:
       \begin{equation*}
         \textcolor{red}{p(\by|\bx, \bw, M)} \propto \prod_i \exp \left( - \frac{ (y_i - f_{\bw}(x_i))^2}{2 \sigma_{noise}^2} \right)
       \end{equation*}
 
-    \pause
-
     Prior over parameters:
       \begin{equation*}
         \textcolor{blue}{p(\bw|M)}
       \end{equation*}
-
-    \pause
 
     Posterior parameter distribution:
       \begin{equation*}
@@ -256,21 +310,15 @@
         p(y^*|x^*,\bx,\by,M) = \int p(y^*|\bw,x^*,M) \textcolor{green}{p(\bw|\bx,\by,M)} d\bw
       \end{equation*}
 
-    \pause
-
     Marginal Likelihood:
       \begin{equation*}
         p(\by|\bx,M) = \int \textcolor{blue}{p(\bw|M)} \textcolor{red}{p(\by|\bx, \bw, M)} d\bw
       \end{equation*}
 
-    \pause
-
     Model probability:
       \begin{equation*}
         p(M|\bx,\by) = \frac{p(M)p(\by|\bx,M)}{p(\by|\bx)}
       \end{equation*}
-
-    \pause
 
     \begin{center}
       \textbf{Problem: integrals are intractable for most interesting models!}
@@ -281,21 +329,15 @@
     \frametitle{Non-parametric Gaussian Process Models}
     Parameters are replaced by ``function'' itself!
 
-    \pause
-
     Gaussian Likelihood:
       \begin{equation*}
         \textcolor{red}{\by|\bx,f(x),M} \sim \gaussN(\boldf, \sigma^2_{noise}I)
       \end{equation*}
 
-    \pause
-
     Gaussian Process Prior:
       \begin{equation*}
         \textcolor{blue}{f(x)|M} \sim \gp(m(x) = 0, k(x,x'))
       \end{equation*}
-
-    \pause
 
     Leading to Gaussian Process Posterior:
       \begin{equation*}
@@ -321,77 +363,9 @@
           \; k(x*,x*) - k(x^*,\bx)[K + \sigma^2_{noise}I]^{-1} k(\bx,x^*) )
         \end{array}
       \end{equation*}
-
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Optimizing Marginal Likelihood}
-    \begin{equation*}
-      \log p(\by|\bx,M) = - \textcolor{blue}{\frac{1}{2} \by^T K^{-1} \by} - \textcolor{red}{\frac{1}{2} \log|K|} - \frac{n}{2} \log (2\pi)
-    \end{equation*}
-
-    is a combination of \textcolor{blue}{data fit} and \textcolor{red}{complexity penalty} terms. Occam's razor is automatic!\\~\\
-
-    \pause
-
-    \textcolor{blue}{Learning} in Gaussian process models involves finding:
-      \begin{itemize}
-        \item Form of covariance matrix
-        \item Unknown hyperparameter values $\theta$
-      \end{itemize}
-
-    \pause
-
-    ~\\ This can be done by optimizing the marginal likielihood:
-
-    \begin{equation*}
-      \frac{\partial \log p(\by|\bx,\theta,M)}{\partial \theta_j} = \frac{1}{2} \by^T K^{-1} \frac{\partial K}{\partial \theta_j} K^{-1} \by - \frac{1}{2} \text{trace} \left( K^{-1} \frac{\partial K}{\partial \theta_j} \right)
-    \end{equation*}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Example: Length Parameter Learning}
-
-    Covariance function: $k(x,x') = \nu^2 \exp \left( - \frac{(x - x')^2}{2l^2} \right) + \sigma_{noise}^2 \delta_{xx'}$
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.8\textwidth]{gpLearning.png}
-    \end{figure}
-
-    Posterior mean function is plotted for 3 different length scales, green curve maximizes marginal likelihood. \textcolor{blue}{Although exact fit for data can be found, marginal likelihood does not favour this!}
-  \end{frame}
-
-  \begin{frame}
-    \frametitle{Why does Bayesian Inference work?: Occam's Razor}
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.9\textwidth]{occamsRazor.png}
-    \end{figure}
   \end{frame}
 
   \section{Covariance Functions}
-
-  \begin{frame}
-    \frametitle{Rational Quadratic (RQ) Covariance Function}
-
-    \begin{equation*}
-      k_{RQ}(r) = \left( 1 + \frac{r^2}{2 \alpha l^2} \right)^{- \alpha}
-    \end{equation*}
-
-    with $\alpha, l > 0$ can be seen as an infinite sum of squared exponential (SE) covariance functions with differen length-scales.\\~
-
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.9\textwidth]{rationalCovFunc.png}
-    \end{figure}
-
-    \begin{center}
-      Limit $\alpha \leftarrow \infty$ of the RQ covariance function is SE.
-    \end{center}
-
-  \end{frame}
 
   \begin{frame}
     \frametitle{Matern Covariance Function}
@@ -425,7 +399,7 @@
     \end{figure}
   \end{frame}
 
-  \section{Application to CO$_2$ Prediction Problem}
+  \section{Practical Application}
 
   \begin{frame}
     \frametitle{Prediction Problem}
@@ -487,18 +461,59 @@
     \begin{itemize}
       \item Bayesian inference is tractable for GP Regression
       \item Predictions are probabilistic
-      \item Comparison of different models possible via Marginal Likelihood
     \end{itemize}
-
-    \pause
 
     \textbf{Scope for research:}
 
     \begin{itemize}
       \item Interesting covariance functions
-      \item Search for efficient approximations and sparse methods
       \item Application to high-dimensional data (Deep Learning)
     \end{itemize}
 
+  \end{frame}
+
+  \section{Appendix}
+
+  \begin{frame}[noframenumbering]
+    \frametitle{Optimizing Marginal Likelihood}
+    \begin{equation*}
+      \log p(\by|\bx,M) = - \textcolor{blue}{\frac{1}{2} \by^T K^{-1} \by} - \textcolor{red}{\frac{1}{2} \log|K|} - \frac{n}{2} \log (2\pi)
+    \end{equation*}
+
+    is a combination of \textcolor{blue}{data fit} and \textcolor{red}{complexity penalty} terms. Occam's razor is automatic!\\~\\
+
+    \textcolor{blue}{Learning} in Gaussian process models involves finding:
+      \begin{itemize}
+        \item Form of covariance matrix
+        \item Unknown hyperparameter values $\theta$
+      \end{itemize}
+
+    ~\\ This can be done by optimizing the marginal likielihood:
+
+    \begin{equation*}
+      \frac{\partial \log p(\by|\bx,\theta,M)}{\partial \theta_j} = \frac{1}{2} \by^T K^{-1} \frac{\partial K}{\partial \theta_j} K^{-1} \by - \frac{1}{2} \text{trace} \left( K^{-1} \frac{\partial K}{\partial \theta_j} \right)
+    \end{equation*}
+  \end{frame}
+
+  \begin{frame}[noframenumbering]
+    \frametitle{Example: Length Parameter Learning}
+
+    Covariance function: $k(x,x') = \nu^2 \exp \left( - \frac{(x - x')^2}{2l^2} \right) + \sigma_{noise}^2 \delta_{xx'}$
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.8\textwidth]{gpLearning.png}
+    \end{figure}
+
+    Posterior mean function is plotted for 3 different length scales, green curve maximizes marginal likelihood. \textcolor{blue}{Although exact fit for data can be found, marginal likelihood does not favour this!}
+  \end{frame}
+
+  \begin{frame}[noframenumbering]
+    \frametitle{Why does Bayesian Inference work?: Occam's Razor}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.9\textwidth]{occamsRazor.png}
+    \end{figure}
   \end{frame}
 \end{document}
