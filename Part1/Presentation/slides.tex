@@ -22,7 +22,7 @@
 \usepackage{subcaption}
 \graphicspath{{./Images/}}
 \usepackage[absolute,overlay]{textpos}
-\usetikzlibrary{arrows,shapes,backgrounds,shapes.misc,fit}
+\usetikzlibrary{arrows,shapes,backgrounds,shapes.misc,fit,positioning}
 
 \setbeamercovered{invisible}
 %\setbeamercovered{transparent}
@@ -91,6 +91,7 @@
 
     \begin{columns}
       \begin{column}{0.33\textwidth}
+        Generate functions
         \begin{figure}
           \centering
           \includegraphics[width=\textwidth]{func1.png}
@@ -98,6 +99,7 @@
       \end{column}
       \pause
       \begin{column}{0.33\textwidth}
+        Observe Data
         \begin{figure}
           \centering
           \includegraphics[width=\textwidth]{func2.png}
@@ -105,6 +107,7 @@
       \end{column}
       \pause
       \begin{column}{0.33\textwidth}
+        Remove invalid functions
         \begin{figure}
           \centering
           \includegraphics[width=\textwidth]{func3.png}
@@ -221,6 +224,12 @@
       \centering
       \includegraphics[width=\textwidth]{covariance1.png}
     \end{figure}
+
+    \begin{itemize}
+      \item \textcolor{blue}{Joint distribution, $p(f_1,f_2)$}
+      \item \textcolor{green}{Observation to $f_1 = -0.313$}
+      \item \textcolor{red}{Conditional density, $p(f_2|f_1 = -0.313)$}
+    \end{itemize}
   \end{frame}
 
   \begin{frame}[noframenumbering]
@@ -230,11 +239,22 @@
       \centering
       \includegraphics[width=\textwidth]{covariance2.png}
     \end{figure}
+
+    \begin{itemize}
+      \item \textcolor{blue}{Joint distribution, $p(f_1,f_5)$}
+      \item \textcolor{green}{Observation to $f_1 = -0.313$}
+      \item \textcolor{red}{Conditional density, $p(f_5|f_1 = -0.313)$}
+    \end{itemize}
   \end{frame}
 
   \begin{frame}
     \frametitle{Squared Exponential Covariance Function}
 
+    \begin{equation*}
+      k(\mathbf{x},\mathbf{x}') = \alpha \text{exp} \left( - \frac{\|\mathbf{x} - \mathbf{x}'\|^2}{2l^2} \right)
+    \end{equation*}
+
+    where $\alpha$ is the variance and $\l$ is the length scale of the covariance function
     \begin{columns}
       \begin{column}{0.35\textwidth}
         \begin{figure}
@@ -399,8 +419,6 @@
     \end{figure}
   \end{frame}
 
-  \section{Practical Application}
-
   \begin{frame}
     \frametitle{Prediction Problem}
 
@@ -451,7 +469,222 @@
     \end{figure}
   \end{frame}
 
-  \section{Conclusions}
+  \section{Dimensionality Reduction with GP}
+
+  \begin{frame}
+  \frametitle{Motivation for Dimensionality Reduction}
+
+  \begin{itemize}
+    \item For data with underlying ``structure'', we expect:
+      \begin{itemize}
+        \item Fewer distortions than dimensions.
+        \item Data to lie on a low-dimensional manifold.
+      \end{itemize}
+    \item Conclusion: Deal with high-dimensional data by looking for low-dimensional embedding.
+  \end{itemize}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Non-linear Dimensionality Reduction}
+
+  \begin{center}
+    \textbf{UPSC Handwritten Digit Dataset}
+  \end{center}
+
+  \begin{columns}[t]
+    \begin{column}[t]{0.3\textwidth}
+      \centering
+      3648 dimensional space
+      \begin{figure}
+        \centering
+        \caption*{Digit 6 Image}
+        \includegraphics[width=0.3\textwidth]{digitIm1.png}
+      \end{figure}
+      \begin{figure}
+        \centering
+        \caption*{Random Image}
+        \includegraphics[width=0.3\textwidth]{digitIm2.png}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \centering
+      Low-dimensional manifold for digit rotation
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{pca1.png}
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Probabilistic Generative Model}
+
+  \begin{itemize}
+    \item \textcolor{blue}{Observed} (high-dimensional) data: $\mathbf{Y} = [y_1~y_2~\cdots~y_N]^T \in \mathbb{R}^{N \times D}$
+    \item \textcolor{blue}{Latent} (low-dimensional) data: $\mathbf{X} = [x_1~x_2~\cdots~x_N]^T \in \mathbb{R}^{N \times Q},~Q << D$
+    \item Assume a relationship/mapping of the form:
+      \begin{equation}
+        \begin{array}{c}
+          y_i = \mathbf{W}x_i + \epsilon_i,~\epsilon_i \sim \mathcal{N}(\mathbf{0},\sigma^2\mathbf{I})\\~\\
+          y_i = f(x_i) = \epsilon_i
+        \end{array}
+      \end{equation}
+    \item Resultant likelihood on the data:
+      \begin{equation}
+        p(\mathbf{Y}|\mathbf{X},\mathbf{W}) = \prod_{i = 1}^N \mathcal{N}(y_i | \mathbf{W}x_i, \sigma^2\mathbf{I})
+      \end{equation}
+  \end{itemize}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Probabilistic Generative Model}
+
+  \begin{columns}
+    \begin{column}[t]{0.48\textwidth}
+      \centering
+      \textbf{Probabilistic PCA}
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}
+          \tikzstyle{main}=[circle, minimum size = 6mm, thick, draw =black!80, node distance = 12mm]
+          \tikzstyle{main1}=[circle, minimum size = 6mm, thick, draw = white, node distance = 12mm]
+          \tikzstyle{connect}=[-latex, thick]
+          \node[main,fill=black!40] (y) [label=center:$\mathbf{Y}$] {};
+          \node[main] (x) [above=of y,label=center:$\mathbf{X}$] {};
+          \node[main1] (w) [left=of y,label=center:$\mathbf{W}$] {};
+          \node[main1] (sigma) [right=of y,label=center:$\sigma^2$] {};
+          \path (x) edge [connect] (y)
+          (w) edge [connect] (y)
+          (sigma) edge [connect] (y);
+        \end{tikzpicture}
+      \end{figure}
+      Places prior on latent space $\mathbf{X}$ and optimises linear mapping $\mathbf{W}$
+      \begin{equation}
+        \begin{array}{c}
+          p(\mathbf{X}) = \prod_{i=1}^N \mathcal{N}(x_i|\mathbf{0},\mathbf{I})\\~\\
+          p(\mathbf{Y}|\mathbf{W},\sigma^2) = \int p(\mathbf{Y}|\mathbf{W},\mathbf{X},\sigma^2)~p(\mathbf{X})
+        \end{array}
+      \end{equation}
+    \end{column}
+    \begin{column}[t]{0.48\textwidth}
+      \centering
+      \textbf{Dual Probabilistic PCA}
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}
+          \tikzstyle{main}=[circle, minimum size = 6mm, thick, draw = black!80, node distance = 12mm]
+          \tikzstyle{main1}=[circle, minimum size = 6mm, thick, draw = white, node distance = 12mm]
+          \tikzstyle{connect}=[-latex, thick]
+          \node[main,fill=black!30] (y) [label=center:$\mathbf{Y}$] {};
+          \node[main] (w) [above=of y,label=center:$\mathbf{W}$] {};
+          \node[main1] (x) [left=of y,label=center:$\mathbf{X}$] {};
+          \node[main1] (sigma) [right=of y,label=center:$\sigma^2$] {};
+          \path (x) edge [connect] (y)
+          (w) edge [connect] (y)
+          (sigma) edge [connect] (y);
+        \end{tikzpicture}
+      \end{figure}
+      Places prior on linear mapping $\mathbf{W}$ and optimises latent space $\mathbf{X}$
+      \begin{equation*}
+        \begin{array}{c}
+          p(\mathbf{W}) = \prod_{i=1}^D \mathcal{N}(w_i|\mathbf{0},\mathbf{I})\\~\\
+          p(\mathbf{Y}|\mathbf{X},\sigma^2) = \int p(\mathbf{Y}|\mathbf{W},\mathbf{X},\sigma^2)~p(\mathbf{W})
+        \end{array}
+      \end{equation*}
+    \end{column}
+  \end{columns}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{From Dual PPCA to GP-LVM}
+
+  \begin{exampleblock}{}
+    \centering
+    PPCA and Dual PPCA are equivalent eigenvalue problems with same Maximum Likelihood solution
+  \end{exampleblock}
+
+  \begin{itemize}
+    \item \textcolor{blue}{GP-LVM}: Instead of placing prior $p(\mathbf{W})$ on the function parameters in Dual PPCA, we can place a prior $p(f)$ directly on the mapping function i.e. \textcolor{blue}{$\mathcal{GP}$ Prior}\\~\\
+    \item A $\mathcal{GP}$ Prior allows for \textcolor{blue}{non-linear mappings} if the covariance function is non-linear. For example, the SE Covariance Function:
+      \begin{equation}
+        k(x,x') = \alpha~\text{exp} \left( - \frac{\gamma}{2} (x - x')^T(x - x') \right)
+      \end{equation}
+  \end{itemize}
+
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}
+      \tikzstyle{main}=[circle, minimum size = 6mm, thick, draw = black!80, node distance = 12mm]
+      \tikzstyle{main1}=[circle, minimum size = 6mm, thick, draw = white, node distance = 12mm]
+      \tikzstyle{connect}=[-latex, thick]
+      \node[main,fill=black!30] (y) [label=center:$\mathbf{Y}$] {};
+      \node[main] (f) [above=of y,label=center:$f$] {};
+      \node[main1] (theta) [right=of f,label=center:$\theta$] {};
+      \node[main1] (x) [left=of y,label=center:$\mathbf{X}$] {};
+      \node[main1] (sigma) [right=of y,label=center:$\sigma^2$] {};
+      \path (x) edge [connect] (y)
+      (f) edge [connect] (y)
+      (sigma) edge [connect] (y)
+      (theta) edge [connect] (f);
+    \end{tikzpicture}
+  \end{figure}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Difficulty with Non-linear Mapping}
+
+  \begin{itemize}
+    \item Normalization of probability distribution after passing through non-linear mapping becomes difficult:
+      \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{nonlinear2.png}
+      \end{figure}
+
+    \item No longer possible to optimize wrt $\mathbf{X}$ as an eigen value problem
+      \begin{equation}
+        \mathbf{X},\theta = \text{argmax}_{\mathbf{X},\theta} p(\mathbf{Y}|\mathbf{X},\theta)
+      \end{equation}
+
+    \item Instead we need to use iterative approach and find gradients wrt $\mathbf{X},\alpha,\gamma,\sigma^2$
+
+  \end{itemize}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Linear vs. Non-linear Dimensionality Reduction}
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{mapping.png}
+  \end{figure}
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Extensions of GP-LVM}
+
+  \textbf{Back Constrained GP-LVM}: Ensures points close in the observation space ($Y$) will be close in latent space by constraining back mapping $f': Y \rightarrow X$\\~\\
+
+  \textbf{GP-LVM with Dynamics Model}: Computes latent space assuming that the latent positions ($\mathbf{X}$) are sequential:
+
+  \begin{equation}
+    x_t = h(x_{t-1}) + \epsilon_{dyn}, \epsilon_{dyn} \sim \mathcal{N}(\mathbf{0},\sigma^2_{dyn}\mathbf{I})
+  \end{equation}
+
+  A $\mathcal{GP}$ Prior is placed on the function $h(x)$. The resultant optimization becomes:
+
+  \begin{equation}
+    \mathbf{X},\theta,\theta_{dyn} = \text{argmax}_{\mathbf{X},\theta,\theta_{dyn}}~p(\mathbf{Y}|\mathbf{X},\theta)~p(\mathbf{X}|\theta_{dyn})
+  \end{equation}
+
+  \end{frame}
 
   \begin{frame}
     \frametitle{Conclusions}
@@ -471,8 +704,6 @@
     \end{itemize}
 
   \end{frame}
-
-  \section{Appendix}
 
   \begin{frame}[noframenumbering]
     \frametitle{Optimizing Marginal Likelihood}
