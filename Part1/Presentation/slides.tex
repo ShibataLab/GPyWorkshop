@@ -26,6 +26,8 @@
 
 \setbeamercovered{invisible}
 %\setbeamercovered{transparent}
+\setbeamerfont{footnote}{size=\tiny}
+\setbeamerfont{caption}{size=\tiny}
 
 \newenvironment{reference}[2]{%
   \begin{textblock*}{\textwidth}(#1,#2)
@@ -48,8 +50,8 @@
 \newcommand{\bmu}{\boldsymbol{\mu}}
 \newcommand{\bSig}{\boldsymbol{\Sigma}}
 
-\title{Learning with Gaussian Processes using GPy}
-\author{Nishanth Koganti}
+\title[GPs with GPy]{Learning with Gaussian Processes using GPy}
+\author[Nishanth]{Nishanth Koganti}
 \date{\today}
 
 \begin{document}
@@ -114,6 +116,36 @@
         \end{figure}
       \end{column}
     \end{columns}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Resources}
+
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=0.6\textwidth]{gpml.png}
+          \caption*{Gaussian Processes for Machine Learning \footnotemark[1]}
+        \end{figure}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=0.4\textwidth]{gpss.png}
+          \caption*{Gaussian Process Summer School \footnotemark[2]}
+        \end{figure}
+        \vskip-2em
+        \begin{figure}
+          \centering
+          \includegraphics[width=0.5\textwidth]{gpy.png}
+          \caption*{GPy Library \footnotemark[3]}
+        \end{figure}
+      \end{column}
+    \end{columns}
+    \footnotetext[1]{Gaussian Processes for Machine Learning, C. Williams, C. Rasmussen}
+    \footnotetext[2]{Gaussian Process Summer Schools, \url{http://gpss.cc/}}
+    \footnotetext[3]{GPy Library, \url{https://github.com/SheffieldML/GPy}}
   \end{frame}
 
   \begin{frame}[noframenumbering]
