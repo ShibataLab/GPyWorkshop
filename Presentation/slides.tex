@@ -97,8 +97,6 @@
     \footnotetext[3]{GPy Library, \url{https://github.com/SheffieldML/GPy}}
   \end{frame}
 
-  \subsection{Gaussian Process}
-
   \begin{frame}
     \frametitle{Gaussian Processes: Extremely Short Overview}
 
@@ -128,6 +126,10 @@
       \end{column}
     \end{columns}
   \end{frame}
+
+  \subsection{GPy Library}
+
+  \section{Gaussian Processes}
 
   \begin{frame}
     \frametitle{What is a Gaussian Process?}
@@ -425,27 +427,6 @@
   \end{frame}
 
   \begin{frame}
-  \frametitle{Difficulty with Non-linear Mapping}
-
-  \begin{itemize}
-    \item Normalization of probability distribution after passing through non-linear mapping becomes difficult:
-      \begin{figure}
-        \centering
-        \includegraphics[width=0.5\textwidth]{nonlinear2.png}
-      \end{figure}
-
-    \item No longer possible to optimize wrt $\mathbf{X}$ as an eigen value problem
-      \begin{equation}
-        \mathbf{X},\theta = \text{argmax}_{\mathbf{X},\theta} p(\mathbf{Y}|\mathbf{X},\theta)
-      \end{equation}
-
-    \item Instead we need to use iterative approach and find gradients wrt $\mathbf{X},\alpha,\gamma,\sigma^2$
-
-  \end{itemize}
-
-  \end{frame}
-
-  \begin{frame}
   \frametitle{Linear vs. Non-linear Dimensionality Reduction}
 
   \begin{figure}
@@ -471,25 +452,11 @@
   \begin{equation}
     \mathbf{X},\theta,\theta_{dyn} = \text{argmax}_{\mathbf{X},\theta,\theta_{dyn}}~p(\mathbf{Y}|\mathbf{X},\theta)~p(\mathbf{X}|\theta_{dyn})
   \end{equation}
-
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Conclusions}
+  \subsection{BGPLVM}
 
-    \textbf{Complex non-linear inference problems can be solved by manipulating plain old Gaussian Distributions}
+  \section{GPflow Library}
 
-    \begin{itemize}
-      \item Bayesian inference is tractable for GP Regression
-      \item Predictions are probabilistic
-    \end{itemize}
 
-    \textbf{Scope for research:}
-
-    \begin{itemize}
-      \item Interesting covariance functions
-      \item Application to high-dimensional data (Deep Learning)
-    \end{itemize}
-
-  \end{frame}
 \end{document}
