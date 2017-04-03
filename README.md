@@ -13,37 +13,56 @@ The aim of this workshop is to provide an introduction to GP, BGPLVM and MRD. It
 
 ## Materials
 
-Please clone this repository to access the materials for the workshop. This repository contains the presentation PDFs and Ipython notebooks with exercises on GPy.
-
-## Requirements
-
-Please install the following in your PC to run the experiments provided in the repository:
-* [Anaconda](https://www.continuum.io/downloads): Necessary for Windows, optional for Linux.
-* [Scipy Stack](https://www.scipy.org/index.html): This includes numpy, matplotlib and Ipython. Installation can be done using `pip`:
-```
-(sudo) pip install numpy --upgrade
-(sudo) pip install jupyter --upgrade
-(sudo) pip install matplotlib --upgrade
-(sudo) pip install ipython[all] --upgrade
-```
-The `sudo` is optional if you want to have installation in the root folder when working in the Linux operating system. It should not be used for Anaconda or when working in the Windows operating system.
-* [Tensorflow](https://www.tensorflow.org/install/): Dependency for the GPflow package. Installation instructions available on the Tensorflow website.
-* [GPy](https://github.com/SheffieldML/GPy): Installation instructions available on the homepage.
-* [GPflow](http://gpflow.readthedocs.io/en/latest/index.html): Installation instructions available on the homepage.
+This repository contains the presentation PDFs and Ipython notebooks with exercises on GPy.
 
 ## PC setup for Ubuntu (14.04-16.04)
 
-* GPy has dependencies for Fortran, LibBlas and LibAtlas. Please run the following command before installing GPy:
+* Install Docker by running the following command:
 ```
-sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
+sudo apt-get install docker
 ```
+* Clone the docker image for the workshop
+```
+sudo docker pull buntyke/gp-workshop
+```
+* Run the docker image for the workshop
+```
+sudo docker run -it -p 8888:8888 buntyke/gp-workshop
+```
+* The command outputs text that includes an URL like this:
+```
+Copy/paste this URL into your browser when you connect for the first time, to login with a token:
+http://localhost:8888/?token=b8dbd6e58f68195b150bfcc69751bd97ddc20c097767d100
+```
+Copy the url and paste in the web browser to start the Ipython session.
 
-## PC setup for Windows
+## PC setup for Windows, Mac OSX
 
-For Windows Operating System:
-* Install Anaconda by downloading from this [link](https://www.continuum.io/downloads#windows).
-* Install GPy by opening the Command Prompt window and typing the following command:
+* Download docker-toolbox from this [link](https://www.docker.com/products/docker-toolbox).
+* Install docker-toolbox and agree with all options. This will install Docker-Quickstart-Terminal.
+* Open the Docker-Quickstart-Terminal application which opens a terminal.
+* Download the docker image with this command:
 ```
-pip install GPy
+docker pull buntyke/gp-workshop
 ```
-* All the dependencies required for running the code are either available in Anaconda or installed using GPy.
+* Run the docker image with this command:
+```
+docker run -it -p 8888:8888 buntyke/gp-workshop
+```
+The command outputs text that includes an URL like this:
+```
+Copy/paste this URL into your browser when you connect for the first time, to login with a token:
+http://localhost:8888/?token=b8dbd6e58f68195b150bfcc69751bd97ddc20c097767d100
+```
+* Open a powershell and run the following command:
+```
+docker-machine.exe ip default
+```
+The command outputs an IP like this:
+```
+192.168.99.100
+```
+* Replace localhost with the IP and paste URL above in the web browser to start Ipython session:
+```
+http://192.168.99.100:8888/?token=b8dbd6e58f68195b150bfcc69751bd97ddc20c097767d100
+```
