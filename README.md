@@ -19,7 +19,7 @@ This repository contains the presentation PDFs and Ipython notebooks with exerci
 
 * Install Docker by running the following command:
 ```
-sudo apt-get install docker
+sudo apt-get install -y docker.io
 ```
 * Clone the docker image for the workshop
 ```
