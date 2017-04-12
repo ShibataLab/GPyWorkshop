@@ -4,15 +4,15 @@ There were several questions related to the contents of the workshop and these a
 
 * Why are we using Python 2?
 
-Both GPy and GPflow are supported in Python 2, 3. There is no specific reason for choosing Python 2 and either can be used. However, the Python 2 versions are still widely used and could have lesser bugs for advanced features of the library.
+  Both GPy and GPflow are supported in Python 2, 3. There is no specific reason for choosing Python 2 and either can be used. However, the Python 2 versions are still widely used and could have lesser bugs for advanced features of the library.
 
 * How can GPLVM be trained without any input variable X?
 
-GPLVM is a latent variable model and is a form of unsupervised machine learning. It tries to learn a latent manifold that can efficiently reconstruct high-dimensional observations.
+  GPLVM is a latent variable model and is a form of unsupervised machine learning. It tries to learn a latent manifold that can efficiently reconstruct high-dimensional observations.
 
 * What is the domain of input X in the figure? Is it [0,10]?
 
-In this particular example, we are inferring the GP mapping over input values [0,10]. However, given our observations the GP mapping can be evaluated over any sub domain of real numbers.
+  In this particular example, we are inferring the GP mapping over input values [0,10]. However, given our observations the GP mapping can be evaluated over any sub domain of real numbers.
 
 * What is the significance of estimating eigen values of covariance functions?
 
